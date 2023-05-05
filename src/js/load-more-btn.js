@@ -9,7 +9,7 @@ export default class LoadMoreBtn {
         const refs = {};
         refs.button = document.querySelector(selector);
         refs.label = refs.button.querySelector('.label');
-        refs.spinner = refs.button.querySelector('.spinner');
+        // refs.spinner = refs.button.querySelector('.spinner');
 
         return this.refs;
     }
@@ -17,13 +17,11 @@ export default class LoadMoreBtn {
     enable() {
         this.refs.button.disabled = false;
         this.refs.label.textContent = 'Show more';
-        this.refs.spinner.classList.add('is-hidden');
     }
 
     disable() {
         this.refs.button.disabled = true;
         this.refs.label.textContent = 'We are loading...';
-        this.refs.spinner.classList.remove('is-hidden');
     }
 
     show() {
@@ -31,9 +29,6 @@ export default class LoadMoreBtn {
     }
 
     hide() {
-        if (button) { 
-            selector.hide(); 
-          }
         this.refs.button.classList.add('is-hidden');
-    }
+      }
 }
