@@ -31,6 +31,9 @@ export default class LoadMoreBtn {
     }
 
     hide() {
+        if (button) { 
+            selector.hide(); 
+          }
         this.refs.button.classList.add('is-hidden');
     }
 }
