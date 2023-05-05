@@ -5,11 +5,11 @@ export default class PixabaySearchService {
         this.page = 1;
         this.KEY = '35944916-0a227103958c105cd60c29ad2'
     }
-    fetchImages() {
-        return axios.get(`https://pixabay.com/api/?key=${this.KEY}&q=${this.searchQuery}&image_type=photo&orientation=horizontal&safesearch=true&per_page=40&page=${this.page}`)
+    async fetchImages() {
+        return await axios.get(`https://pixabay.com/api/?key=${this.KEY}&q=${this.searchQuery}&image_type=photo&orientation=horizontal&safesearch=true&per_page=40&page=${this.page}`)
             .then(response => {
                 this.incrementPage();
-                return response.data.hits;
+                return response;
             })
             .catch(error => {
                 console.error(error);
