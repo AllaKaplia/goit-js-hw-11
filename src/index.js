@@ -43,9 +43,10 @@ async function onSearchImages(evt) {
         loadMoreBtn.enable();
         loadMoreBtn.show();
         Notiflix.Notify.success(`Hooray! We found ${data.totalHits} images.`);
-        refs.gallery.insertAdjacentHTML('beforeend', createCardsImagesMarkup(data.hits)); 
-        pixabaySearchService.resetPage();
+        clearCardsGallery();
+        refs.galleryImages.insertAdjacentHTML('beforeend', createCardsImagesMarkup(data.hits)); 
         openLightBoxGallery();
+        pixabaySearchService.resetPage();
     } catch (error) {
         console.log(error);
         Notiflix.Notify.failure(`Sorry, an error occurred. Please try again`);
@@ -64,4 +65,4 @@ function axiosImages() {
     } catch (error) {
       console.log(error);
     }
-  }
+}
