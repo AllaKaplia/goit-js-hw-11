@@ -5,7 +5,6 @@ import PixabaySearchService from './js/searchClassService';
 import LoadMoreBtn from './js/load-more-btn';
 import { openLightBoxGallery } from './js/lightBoxGallery';
 import { createCardsImagesMarkup } from './js/markupService';
-import { smoothScroll } from './js/scroll';
 
 
 const pixabaySearchService = new PixabaySearchService();
@@ -42,7 +41,6 @@ async function onSearchImages(evt) {
 
         loadMoreBtn.enable();
         loadMoreBtn.show();
-        smoothScroll();
         Notify.success(`Hooray! We found ${data.totalHits} images.`);
         refs.gallery.insertAdjacentHTML('beforeend', createCardsImagesMarkup(data.hits)); 
         pixabaySearchService.resetPage();
