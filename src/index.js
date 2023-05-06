@@ -32,22 +32,23 @@ async function onSearchImages(evt) {
     }
 
     try {
-        const { data } = pixabaySearchService.fetchImages();
-        if (!data.totalHits) {
-            Notify.failure("Sorry, there are no images matching your search query. Please try again.")
+        const data = await pixabaySearchService.fetchImages();
+        console.log(data);
+        if (data.totalHits === 0) {
+            Notiflix.Notify.failure("Sorry, there are no images matching your search query. Please try again.")
             pixabaySearchService.resetPage();
             return;
         }
 
         loadMoreBtn.enable();
         loadMoreBtn.show();
-        Notify.success(`Hooray! We found ${data.totalHits} images.`);
+        Notiflix.Notify.success(`Hooray! We found ${data.totalHits} images.`);
         refs.gallery.insertAdjacentHTML('beforeend', createCardsImagesMarkup(data.hits)); 
         pixabaySearchService.resetPage();
         openLightBoxGallery();
     } catch (error) {
-        console.error(error);
-        Notify.failure(`Sorry, an error occurred. Please try again`);
+        console.log(error);
+        Notiflix.Notify.failure(`Sorry, an error occurred. Please try again`);
     }
 }
 
