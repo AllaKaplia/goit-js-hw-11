@@ -5,6 +5,7 @@ import PixabaySearchService from './js/searchClassService';
 import LoadMoreBtn from './js/load-more-btn';
 import { openLightBoxGallery } from './js/lightBoxGallery';
 import { createCardsImagesMarkup } from './js/markupService';
+import { smoothScroll } from './js/scroll';
 
 
 const pixabaySearchService = new PixabaySearchService();
@@ -12,6 +13,8 @@ const loadMoreBtn = new LoadMoreBtn({
     selector: '[data-action="load-more"]',
     hidden: true,
 });
+
+let currentPage = 1;
 
 
 refs.searchForm.addEventListener('submit', onSearchImages);
@@ -32,23 +35,30 @@ async function onSearchImages(evt) {
     }
 
     try {
+        loadMoreBtn.disable();
         const data = await pixabaySearchService.fetchImages();
-        console.log(data);
-        if (data.totalHits === 0) {
+
+        loadMoreBtn.show();
+        
+        if(data.data.hits.length === 0){
             Notiflix.Notify.failure("Sorry, there are no images matching your search query. Please try again.")
-            pixabaySearchService.resetPage();
+        }
+        clearCardsGallery();
+        pixabaySearchService.resetPage();
+
+        const arr = await pixabaySearchService.fetchImages();
+
+        if (data.data.totalHits < (pixabaySearchService.page * pixabaySearchService.per_page)) {
+            Notiflix.Notify.info(`Hooray! We found ${data.data.totalHits} images.`);
+            refs.galleryImages.insertAdjacentHTML('beforeend', createCardsImagesMarkup(arr.data.hits));
+            loadMoreBtn.hide();
             return;
         }
 
         loadMoreBtn.enable();
-        loadMoreBtn.show();
-        Notiflix.Notify.success(`Hooray! We found ${data.totalHits} images.`);
-        clearCardsGallery();
-        const arr = await pixabaySearchService.fetchImages().then(response => console.log(response.data.hits));
-        console.log(arr);
-        refs.galleryImages.insertAdjacentHTML('beforeend', createCardsImagesMarkup(arr)); 
-        openLightBoxGallery();
-        pixabaySearchService.resetPage();
+        refs.galleryImages.insertAdjacentHTML('beforeend', createCardsImagesMarkup(arr.data.hits));
+        smoothScroll();
+        openLightBoxGallery(); 
     } catch (error) {
         console.log(error);
         Notiflix.Notify.failure(`Sorry, an error occurred. Please try again`);
@@ -59,12 +69,16 @@ function clearCardsGallery() {
     refs.galleryImages.innerHTML = '';
 }
 
-function axiosImages() {
-    pixabaySearchService.incrementPage();
+async function axiosImages() {
+    currentPage += 1;
   
     try {
-      onSearchImages();
+        const arr = await pixabaySearchService.fetchImages();
+        refs.galleryImages.insertAdjacentHTML(
+          'beforeend',
+          createCardsImagesMarkup(arr.data.hits, currentPage)
+        );
     } catch (error) {
-      console.log(error);
+        console.log(error);
     }
 }
