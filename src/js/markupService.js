@@ -1,6 +1,7 @@
-export function createCardsImagesMarkup(hits) {
-    return hits.map(({ webformatURL, largeImageURL, tags, likes, views, comments, downloads }) => {
-        return `
+export const createCardsImagesMarkup = hits => {
+    return hits.map(hit => {
+      const { webformatURL, largeImageURL, tags, likes, views, comments, downloads } = hit;
+      return `
         <div class="photo-card">
         <a href="${largeImageURL}">
         <img src="${webformatURL}" alt="${tags}" class="img-small" loading="lazy"/>
@@ -20,4 +21,4 @@ export function createCardsImagesMarkup(hits) {
         </p>
         </div>
         </div>`}).join('');
-}
+};
