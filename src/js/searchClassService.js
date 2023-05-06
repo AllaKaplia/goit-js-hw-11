@@ -3,6 +3,7 @@ export default class PixabaySearchService {
     constructor() {
         this.searchQuery = '';
         this.page = 1;
+        this.per_page = 40;
         this.KEY = '35944916-0a227103958c105cd60c29ad2'
     }
     async fetchImages() {
