@@ -44,7 +44,9 @@ async function onSearchImages(evt) {
         loadMoreBtn.show();
         Notiflix.Notify.success(`Hooray! We found ${data.totalHits} images.`);
         clearCardsGallery();
-        refs.galleryImages.insertAdjacentHTML('beforeend', createCardsImagesMarkup(data.hits)); 
+        const arr = await pixabaySearchService.fetchImages().then(response => console.log(response.data.hits));
+        console.log(arr);
+        refs.galleryImages.insertAdjacentHTML('beforeend', createCardsImagesMarkup(arr)); 
         openLightBoxGallery();
         pixabaySearchService.resetPage();
     } catch (error) {
