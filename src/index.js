@@ -21,20 +21,20 @@ refs.searchForm.addEventListener('submit', onSearchImages);
 loadMoreBtn.refs.button.addEventListener('click', axiosImages);
 
 async function onSearchImages(evt) {
-    evt.preventDefault();
-
-    loadMoreBtn.hide();
-    clearCardsGallery();
-    pixabaySearchService.query = evt.currentTarget.elements.searchQuery.value.trim();
-
-    if(pixabaySearchService.query.trim() === ''){
-        Notiflix.Notify.info('You need to enter a word to start the search');
-        pixabaySearchService.resetPage();
-        clearCardsGallery();
-        return;
-    }
-
     try {
+        evt.preventDefault();
+
+        loadMoreBtn.hide();
+        clearCardsGallery();
+        pixabaySearchService.query = evt.currentTarget.elements.searchQuery.value.trim();
+    
+        if(pixabaySearchService.query === ''){
+            Notiflix.Notify.info('You need to enter a word to start the search');
+            pixabaySearchService.resetPage();
+            clearCardsGallery();
+            return;
+        }
+
         loadMoreBtn.disable();
         const data = await pixabaySearchService.fetchImages();
 
@@ -47,6 +47,7 @@ async function onSearchImages(evt) {
         pixabaySearchService.resetPage();
 
         const arr = await pixabaySearchService.fetchImages();
+        openLightBoxGallery();
 
         if (data.data.totalHits < (pixabaySearchService.page * pixabaySearchService.per_page)) {
             Notiflix.Notify.info(`Hooray! We found ${data.data.totalHits} images.`);
