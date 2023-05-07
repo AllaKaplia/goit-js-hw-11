@@ -28,6 +28,7 @@ async function onSearchImages(evt) {
         evt.preventDefault();
 
         loadMoreBtn.hide();
+        pixabaySearchService.resetPage();
         clearCardsGallery();
         pixabaySearchService.query = evt.currentTarget.elements.searchQuery.value.trim();
 
@@ -47,7 +48,7 @@ async function onSearchImages(evt) {
 
         loadMoreBtn.show();
         
-        if(data.hits.length === 0){
+        if(data.data.hits.length === 0){
             Notiflix.Notify.failure("Sorry, there are no images matching your search query. Please try again.")
         }
         pixabaySearchService.resetPage();
@@ -55,15 +56,16 @@ async function onSearchImages(evt) {
         const arr = await pixabaySearchService.fetchImages();
         gallery.refresh();
 
-        if (data.totalHits < (pixabaySearchService.page * pixabaySearchService.per_page)) {
-            Notiflix.Notify.info(`Hooray! We found ${data.totalHits} images.`);
-            refs.galleryImages.insertAdjacentHTML('beforeend', createCardsImagesMarkup(arr.hits));
+        if (data.data.totalHits < (pixabaySearchService.page * pixabaySearchService.per_page)) {
+            Notiflix.Notify.info(`Hooray! We found ${data.data.totalHits} images.`);
+            refs.galleryImages.insertAdjacentHTML('beforeend', createCardsImagesMarkup(arr.data.hits));
             loadMoreBtn.hide();
+            clearCardsGallery();
             return;
         }
 
         loadMoreBtn.enable();
-        refs.galleryImages.insertAdjacentHTML('beforeend', createCardsImagesMarkup(arr.hits));
+        refs.galleryImages.insertAdjacentHTML('beforeend', createCardsImagesMarkup(arr.data.hits));
         smoothScroll();
         gallery.refresh();
     } catch (error) {
@@ -83,7 +85,7 @@ async function axiosImages() {
         const arr = await pixabaySearchService.fetchImages();
         refs.galleryImages.insertAdjacentHTML(
           'beforeend',
-          createCardsImagesMarkup(arr.hits, currentPage)
+          createCardsImagesMarkup(arr.data.hits, currentPage)
         );
 
         gallery.refresh(); 
