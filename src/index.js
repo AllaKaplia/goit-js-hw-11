@@ -60,7 +60,6 @@ async function onSearchImages(evt) {
             Notiflix.Notify.info(`Hooray! We found ${data.data.totalHits} images.`);
             refs.galleryImages.insertAdjacentHTML('beforeend', createCardsImagesMarkup(arr.data.hits));
             loadMoreBtn.hide();
-            clearCardsGallery();
             return;
         }
 
