@@ -47,7 +47,7 @@ async function onSearchImages(evt) {
 
         loadMoreBtn.show();
         
-        if(data.data.hits.length === 0){
+        if(data.hits.length === 0){
             Notiflix.Notify.failure("Sorry, there are no images matching your search query. Please try again.")
         }
         pixabaySearchService.resetPage();
@@ -55,15 +55,15 @@ async function onSearchImages(evt) {
         const arr = await pixabaySearchService.fetchImages();
         gallery.refresh();
 
-        if (data.data.totalHits < (pixabaySearchService.page * pixabaySearchService.per_page)) {
-            Notiflix.Notify.info(`Hooray! We found ${data.data.totalHits} images.`);
-            refs.galleryImages.insertAdjacentHTML('beforeend', createCardsImagesMarkup(arr.data.hits));
+        if (data.totalHits < (pixabaySearchService.page * pixabaySearchService.per_page)) {
+            Notiflix.Notify.info(`Hooray! We found ${data.totalHits} images.`);
+            refs.galleryImages.insertAdjacentHTML('beforeend', createCardsImagesMarkup(arr.hits));
             loadMoreBtn.hide();
             return;
         }
 
         loadMoreBtn.enable();
-        refs.galleryImages.insertAdjacentHTML('beforeend', createCardsImagesMarkup(arr.data.hits));
+        refs.galleryImages.insertAdjacentHTML('beforeend', createCardsImagesMarkup(arr.hits));
         smoothScroll();
         gallery.refresh();
     } catch (error) {
@@ -83,7 +83,7 @@ async function axiosImages() {
         const arr = await pixabaySearchService.fetchImages();
         refs.galleryImages.insertAdjacentHTML(
           'beforeend',
-          createCardsImagesMarkup(arr.data.hits, currentPage)
+          createCardsImagesMarkup(arr.hits, currentPage)
         );
 
         gallery.refresh(); 
