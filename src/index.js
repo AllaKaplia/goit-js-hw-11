@@ -1,9 +1,10 @@
 import './css/styles.css';
 import Notiflix from 'notiflix';
+import SimpleLightbox from "simplelightbox";
+import "simplelightbox/dist/simple-lightbox.min.css";
 import refs from './js/refs';
 import PixabaySearchService from './js/searchClassService';
 import LoadMoreBtn from './js/load-more-btn';
-import { openLightBoxGallery } from './js/lightBoxGallery';
 import { createCardsImagesMarkup } from './js/markupService';
 import { smoothScroll } from './js/scroll';
 
@@ -13,6 +14,8 @@ const loadMoreBtn = new LoadMoreBtn({
     selector: '[data-action="load-more"]',
     hidden: true,
 });
+
+const gallery = new SimpleLightbox('.gallery a');
 
 let currentPage = 1;
 
@@ -27,6 +30,10 @@ async function onSearchImages(evt) {
         loadMoreBtn.hide();
         clearCardsGallery();
         pixabaySearchService.query = evt.currentTarget.elements.searchQuery.value.trim();
+
+        if(!pixabaySearchService.query) {
+            return;
+        }
     
         if(pixabaySearchService.query === ''){
             Notiflix.Notify.info('You need to enter a word to start the search');
@@ -43,11 +50,10 @@ async function onSearchImages(evt) {
         if(data.data.hits.length === 0){
             Notiflix.Notify.failure("Sorry, there are no images matching your search query. Please try again.")
         }
-        clearCardsGallery();
         pixabaySearchService.resetPage();
 
         const arr = await pixabaySearchService.fetchImages();
-        openLightBoxGallery();
+        gallery.refresh();
 
         if (data.data.totalHits < (pixabaySearchService.page * pixabaySearchService.per_page)) {
             Notiflix.Notify.info(`Hooray! We found ${data.data.totalHits} images.`);
@@ -59,7 +65,7 @@ async function onSearchImages(evt) {
         loadMoreBtn.enable();
         refs.galleryImages.insertAdjacentHTML('beforeend', createCardsImagesMarkup(arr.data.hits));
         smoothScroll();
-        openLightBoxGallery(); 
+        gallery.refresh();
     } catch (error) {
         console.log(error);
         Notiflix.Notify.failure(`Sorry, an error occurred. Please try again`);
@@ -79,6 +85,8 @@ async function axiosImages() {
           'beforeend',
           createCardsImagesMarkup(arr.data.hits, currentPage)
         );
+
+        gallery.refresh(); 
     } catch (error) {
         console.log(error);
     }
