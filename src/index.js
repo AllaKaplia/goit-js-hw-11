@@ -17,8 +17,6 @@ const loadMoreBtn = new LoadMoreBtn({
 
 const gallery = new SimpleLightbox('.gallery a');
 
-let currentPage = 1;
-
 
 refs.searchForm.addEventListener('submit', onSearchImages);
 loadMoreBtn.refs.button.addEventListener('click', axiosImages);
@@ -48,23 +46,19 @@ async function onSearchImages(evt) {
 
         loadMoreBtn.show();
         
-        if(data.data.hits.length === 0){
+        if(data.hits.length === 0){
             Notiflix.Notify.failure("Sorry, there are no images matching your search query. Please try again.")
         }
         pixabaySearchService.resetPage();
 
-        const arr = await pixabaySearchService.fetchImages();
-        gallery.refresh();
-
-        if (data.data.totalHits < (pixabaySearchService.page * pixabaySearchService.per_page)) {
-            Notiflix.Notify.info(`Hooray! We found ${data.data.totalHits} images.`);
-            refs.galleryImages.insertAdjacentHTML('beforeend', createCardsImagesMarkup(arr.data.hits));
-            loadMoreBtn.hide();
+        if (data.totalHits < (pixabaySearchService.page * pixabaySearchService.per_page)) {
+            refs.galleryImages.insertAdjacentHTML('beforeend', createCardsImagesMarkup(data.hits));
+            Notiflix.Notify.info(`Hooray! We found ${data.totalHits} images.`);
             return;
         }
 
-        loadMoreBtn.enable();
-        refs.galleryImages.insertAdjacentHTML('beforeend', createCardsImagesMarkup(arr.data.hits));
+
+        refs.galleryImages.insertAdjacentHTML('beforeend', createCardsImagesMarkup(data.hits));
         smoothScroll();
         gallery.refresh();
     } catch (error) {
@@ -76,19 +70,12 @@ async function onSearchImages(evt) {
 function clearCardsGallery() {
     refs.galleryImages.innerHTML = '';
 }
-
-async function axiosImages() {
-    currentPage += 1;
   
-    try {
-        const arr = await pixabaySearchService.fetchImages();
-        refs.galleryImages.insertAdjacentHTML(
-          'beforeend',
-          createCardsImagesMarkup(arr.data.hits, currentPage)
-        );
-
-        gallery.refresh(); 
-    } catch (error) {
-        console.log(error);
-    }
-}
+  // Refactor axiosImages function
+window.addEventListener('scroll', async () => {
+    const data = await pixabaySearchService.fetchMoreImages();
+    if (!data.data) return;
+  
+    refs.galleryImages.insertAdjacentHTML('beforeend', createCardsImagesMarkup(data.data.hits));
+    gallery.refresh();
+});
