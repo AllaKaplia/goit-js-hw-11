@@ -164,3 +164,37 @@ img {
 .info{
     background-color: honeydew;
 }
+
+.scroll-up {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 54px;
+    height: 54px;
+    padding: 0;
+  
+    /* opacity: 0;
+    visibility: hidden;
+    transition: opacity 350ms, visibility cubic-bezier(0.65, 0.05, 0.36, 1); */
+  
+    cursor: pointer;
+  
+    z-index: 95;
+    position: fixed;
+    right: 30px;
+    bottom: 30px;
+  
+    background-color: rgb(158, 60, 158);
+    border-radius: 50%;
+    border: none;
+    outline: 5px rgba(79, 46, 232, 0.3) solid;
+    transition: transform transition;
+}
+
+.scroll-up:hover, .scroll-up:focus {
+    transform: scale(1.1);
+}
+
+.scroll-up-svg{
+    fill: #fff;
+}
