@@ -7,7 +7,8 @@ import PixabaySearchService from './js/searchClassService';
 import LoadMoreBtn from './js/load-more-btn';
 import { createCardsImagesMarkup } from './js/markupService';
 import smoothScroll from './js/scroll';
-import clearCardsGallery from './js/clearCards'
+import clearCardsGallery from './js/clearCards';
+
 
 const gallery = new SimpleLightbox('.gallery a');
 const pixabaySearchService = new PixabaySearchService();
@@ -19,6 +20,7 @@ const loadMoreBtn = new LoadMoreBtn({
 
 refs.searchForm.addEventListener('submit', onSearchImages);
 loadMoreBtn.refs.button.addEventListener('click', onLoadMoreImages);
+refs.scrollUp.addEventListener('click', onScrollUpClick);
 
 async function onSearchImages(evt) {
     try {
@@ -101,4 +103,15 @@ async function onLoadingImagesOnNextPages() {
     } catch (error) {
         console.log(error);
     }
+}
+
+function onScrollUpClick(evt) {
+    console.log(evt.currentTarget);
+    if(evt.currentTarget){
+        scrollToTop() 
+    }
+}
+
+function scrollToTop() {
+    window.scrollTo({ top: 0, behavior: 'smooth' }); // плавна прокрутка до верху
 }
