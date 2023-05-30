@@ -58,6 +58,12 @@ img {
     }
 }
 
+.title-magic {
+    font-size: 36px;
+    text-align: center;
+    margin-bottom: 25px;
+}
+
 .search-form{
     display: flex;
     align-items: center;
