@@ -7,6 +7,7 @@ import PixabaySearchService from './js/searchClassService';
 import LoadMoreBtn from './js/load-more-btn';
 import { createCardsImagesMarkup } from './js/markupService';
 import smoothScroll from './js/scroll';
+import clearCardsGallery from './js/clearCards'
 
 const gallery = new SimpleLightbox('.gallery a');
 const pixabaySearchService = new PixabaySearchService();
@@ -38,14 +39,9 @@ async function onSearchImages(evt) {
 
         pixabaySearchService.resetPage();
         axiosSearchImages();
-
     } catch (error) {
         Notiflix.Notify.failure(`Sorry, an error occurred. Please try again`);
     }
-}
-
-function clearCardsGallery() {
-    refs.galleryImages.innerHTML = '';
 }
 
 async function axiosSearchImages() {
@@ -62,8 +58,6 @@ async function axiosSearchImages() {
         Notiflix.Notify.info(`Hooray! We found ${data.data.totalHits} images.`);
         refs.galleryImages.insertAdjacentHTML('beforeend', createCardsImagesMarkup(data.data.hits));
         gallery.refresh();
-
-
     } catch (error) {
         console.log(error);
     }
